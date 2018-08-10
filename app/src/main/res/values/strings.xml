@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">android-monitor-util</string>
+    <string name="fullscreen">fullscreen</string>
 </resources>

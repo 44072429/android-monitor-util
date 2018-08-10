@@ -1,6 +1,8 @@
 package android.ys.com.monitor_util;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -8,9 +10,12 @@ import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.ys.com.monitor_util.util.BaseConfig;
 
 /**
@@ -32,6 +37,9 @@ public class VideoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
 	private int sfWidth, sfHeight;
 
+	private int normalHeight = 0;
+	private boolean isFullscreen = false;
+
 	/** 视频索引标记 */
 	private int index = -1;
 
@@ -40,6 +48,8 @@ public class VideoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
 	/** 视频截图标记 */
 	private boolean isVideoSnap;
+
+	private long lastClickTime = 0;
 
 	/** 视频录像管理对象 */
 	private static final MediaRecordManager recordManager = MediaRecordManager.singleton();
@@ -56,19 +66,16 @@ public class VideoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
 	public VideoSurfaceView(Context context) {
 		super(context);
-
 		initSurface();
 	}
 
 	public VideoSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
 		initSurface();
 	}
 
 	public VideoSurfaceView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-
 		initSurface();
 	}
 
@@ -82,6 +89,19 @@ public class VideoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
 		preRendering = false;
 		rendering = false;
+
+		this.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				long l = SystemClock.uptimeMillis();
+				if(l - lastClickTime < 500) {
+					setFullscreen(!isFullscreen);
+				}
+				else {
+					lastClickTime = l;
+				}
+			}
+		});
 	}
 
 	@Override
@@ -174,6 +194,28 @@ public class VideoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 	public void closeSurfaceRender() {
 		stopRender();
 		preRendering = false;
+	}
+
+	/**
+	 * 全屏
+	 *
+	 */
+	public void setFullscreen(boolean fullscreen) {
+		ViewGroup.LayoutParams lp = getLayoutParams();
+		if (fullscreen) {
+			normalHeight = lp.height;
+			lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+			lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+		} else {
+			lp.height = normalHeight;
+			lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+		}
+		setLayoutParams(lp);
+
+//		if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+//			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//		}
+		isFullscreen = fullscreen;
 	}
 
 	/**

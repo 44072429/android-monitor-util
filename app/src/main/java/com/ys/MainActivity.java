@@ -3,6 +3,9 @@ package com.ys;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.ys.com.android_monitor_util.R;
 import android.ys.com.monitor_util.DecoderTaskManager;
 import android.ys.com.monitor_util.LinkEventProxy;
@@ -25,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.video_surface)
     VideoSurfaceView video_surface;
 
+    @BindView(R.id.button)
+    Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +44,18 @@ public class MainActivity extends AppCompatActivity {
 
         video_surface.setIndex(0);
         openVideo();
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                video_surface.setFullscreen(true);
+            }
+        });
     }
 
-    /** Socket连接状态 */
+    /**
+     * Socket连接状态
+     */
     private void onSocketState(Object obj, int state) {
         switch (state) {
             case SocketState.Socket_Connect: {
@@ -124,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // 关闭视频
-                   closeVideo();
+                    closeVideo();
 //                    // 显示添加标记
 //                    showHideAddMarker(View.VISIBLE, sltIdx);
 //                    // 隐藏视频窗体
