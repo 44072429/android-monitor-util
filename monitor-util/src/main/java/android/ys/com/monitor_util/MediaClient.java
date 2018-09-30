@@ -114,7 +114,8 @@ public class MediaClient implements Runnable {
 		if (isLogined)
 			return;
 
-		MediaOutput msg = new CSMediaDeviceConnect(cntData.deviceId, cntData.channelId, cntData.endId);
+//		MediaOutput msg = new CSMediaDeviceConnect(cntData.deviceId, cntData.channelId, cntData.endId);
+		MediaOutput msg = new CSMediaDeviceConnectV2(cntData.deviceId, cntData.channelId, 1);
 		msg.sendPacket(outputStream);
 
 		isLogined = true;

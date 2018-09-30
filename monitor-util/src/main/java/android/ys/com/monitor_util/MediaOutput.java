@@ -11,7 +11,7 @@ import java.io.OutputStream;
  */
 public abstract class MediaOutput {
 	/** 最大缓冲区大小 */
-	private static final int Max_Buffer_Size = 128;
+	private static final int Max_Buffer_Size = 1024;
 
 	/** 缓冲数据 */
 	private final byte buffer[] = new byte[Max_Buffer_Size];
