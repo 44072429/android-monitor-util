@@ -184,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
             cntData.port = 21002;
             cntData.deviceId = 226;
             cntData.channelId = 1; // 主码流
+//            cntData.port = 21003;
+//            cntData.deviceId = 202;
+//            cntData.channelId = 1211;
 
             // 初始化流媒体对象
             MediaClientManager.singleton().initClient(index, cntData);
